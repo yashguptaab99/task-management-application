@@ -16,6 +16,8 @@ module.exports = {
 		'src/**/*.ts',
 		'!src/resources/',
 		'!src/config/**/*.ts',
+		'!src/core/**/*.ts',
+		'!src/resources/**/*.ts',
 		'!src/modules/health/**/*.ts',
 		'!src/**/*.spec.ts',
 		'!src/*.ts',

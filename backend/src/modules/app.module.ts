@@ -11,7 +11,9 @@ import { HttpCacheInterceptor } from '@task-manager/core/interceptors/cache.inte
 import { CachingModule } from '@task-manager/core/cache'
 import { TranslationModule } from '@task-manager/resources/i18n'
 
-const API_MODULES = []
+import { HealthCheckModule } from '@task-manager/modules/health/health.module'
+
+const API_MODULES = [HealthCheckModule]
 
 @Module({
 	imports: [

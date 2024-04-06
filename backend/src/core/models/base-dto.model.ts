@@ -1,5 +1,8 @@
 import { ApiResponseProperty } from '@nestjs/swagger'
 import { Types } from 'mongoose'
+import { Allow, Validate } from 'class-validator'
+
+import { NoEmptyBodyRule } from '@task-manager/core/validator-rules'
 
 import { IBaseModel, IOwner } from '@task-manager/interfaces/base.types'
 
@@ -20,4 +23,10 @@ export class OwnerDTO implements IOwner {
 
 	@ApiResponseProperty({ type: () => String, example: 'andre@scal.io' })
 	email: string
+}
+
+export class BaseUpdateDTO {
+	@Validate(NoEmptyBodyRule)
+	@Allow()
+	protected checkEmpty?: never
 }

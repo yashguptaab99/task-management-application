@@ -13,6 +13,7 @@
 	"eslint.workingDirectories": ["./src"],
 	"cSpell.words": [
 		"Frameguard",
-		"HSTS"
+		"HSTS",
+		"preinstall"
 	]
 }

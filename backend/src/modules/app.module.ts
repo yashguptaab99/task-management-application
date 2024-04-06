@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino/LoggerModule'
 import { APP_INTERCEPTOR } from '@nestjs/core'
 
+import { DatabaseModule } from '@task-manager/config/database'
 import { EnvironmentModule, ThrottlerConfigModule } from '@task-manager/config'
 import { pinoLoggerConfig } from '@task-manager/config/logging/pino.config'
 import { CustomLoggerModule } from '@task-manager/core/logger'
@@ -19,6 +20,7 @@ const API_MODULES = []
 		}),
 		TranslationModule.forRoot(),
 		ThrottlerConfigModule,
+		DatabaseModule,
 		LoggerModule.forRoot(pinoLoggerConfig),
 		EnvironmentModule.forRoot(),
 		CachingModule,

@@ -15,11 +15,12 @@ import { PaginationModule } from '@task-manager/core/pagination'
 import { ValidatorRulesModule } from '@task-manager/core/validator-rules'
 
 import { HealthCheckModule } from '@task-manager/modules/health/health.module'
+import { TaskModule } from '@task-manager/modules/task/task.module'
 
-const API_MODULES = [HealthCheckModule]
+const API_MODULES = [HealthCheckModule, TaskModule]
 
 // TODO: Add new root api routes
-const APIs = []
+const APIs = ['tasks']
 @Module({
 	imports: [
 		ConfigModule.forRoot({

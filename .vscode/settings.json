@@ -18,6 +18,7 @@
 		"mediaqueries",
 		"preinstall",
 		"tabler",
-		"typecheck"
+		"typecheck",
+		"webp"
 	]
 }

@@ -12,6 +12,7 @@ import { CachingModule } from '@task-manager/core/cache'
 import { TranslationModule } from '@task-manager/resources/i18n'
 import { QueryParserMiddleware } from '@task-manager/core/middlewares'
 import { PaginationModule } from '@task-manager/core/pagination'
+import { ValidatorRulesModule } from '@task-manager/core/validator-rules'
 
 import { HealthCheckModule } from '@task-manager/modules/health/health.module'
 
@@ -31,6 +32,7 @@ const APIs = []
 		EnvironmentModule.forRoot(),
 		PaginationModule,
 		CachingModule,
+		ValidatorRulesModule,
 		CustomLoggerModule,
 		...API_MODULES,
 	],

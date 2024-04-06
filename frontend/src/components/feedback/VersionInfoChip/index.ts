@@ -1,0 +1,1 @@
+export { VersionInfoChip } from './VersionInfoChip'

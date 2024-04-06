@@ -1,4 +1,4 @@
-import { Module, NestModule } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { LoggerModule } from 'nestjs-pino/LoggerModule'
 import { APP_INTERCEPTOR } from '@nestjs/core'
@@ -10,11 +10,15 @@ import { CustomLoggerModule } from '@task-manager/core/logger'
 import { HttpCacheInterceptor } from '@task-manager/core/interceptors/cache.interceptor'
 import { CachingModule } from '@task-manager/core/cache'
 import { TranslationModule } from '@task-manager/resources/i18n'
+import { QueryParserMiddleware } from '@task-manager/core/middlewares'
+import { PaginationModule } from '@task-manager/core/pagination'
 
 import { HealthCheckModule } from '@task-manager/modules/health/health.module'
 
 const API_MODULES = [HealthCheckModule]
 
+// TODO: Add new root api routes
+const APIs = []
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -25,6 +29,7 @@ const API_MODULES = [HealthCheckModule]
 		DatabaseModule,
 		LoggerModule.forRoot(pinoLoggerConfig),
 		EnvironmentModule.forRoot(),
+		PaginationModule,
 		CachingModule,
 		CustomLoggerModule,
 		...API_MODULES,
@@ -38,5 +43,12 @@ const API_MODULES = [HealthCheckModule]
 	],
 })
 export class AppModule implements NestModule {
-	configure() {}
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+			.apply(QueryParserMiddleware)
+			.forRoutes(
+				...APIs.map((path) => ({ path, method: RequestMethod.GET })),
+				...APIs.map((path) => ({ path: `${path}/:id/(.*)s`, method: RequestMethod.GET }))
+			)
+	}
 }

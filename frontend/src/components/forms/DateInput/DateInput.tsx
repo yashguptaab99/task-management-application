@@ -32,6 +32,7 @@ export function DateInput({
                 fieldOnChange(e)
                 onChange?.(e)
             }}
+            withAsterisk={false}
             {...field}
             {...props}
         />

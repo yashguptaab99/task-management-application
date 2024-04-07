@@ -2,7 +2,11 @@
     "pageTitle": "Home",
     "title": "Task At Hand:",
     "buttons": {
-        "newTaskBtn": "Add Task"
+        "newTaskBtn": "Add Task",
+        "cancelBtn": "Cancel",
+        "saveBtn": "Save"
     },
-    "headerTitle": "Task Manager"
+    "headerTitle": "Task Manager",
+    "addTitle": "Add Task",
+    "editTitle": "Edit Task"
 }

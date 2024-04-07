@@ -9,6 +9,6 @@
     },
     "dueDate": {
         "label": "Task DueDate",
-        "placeholder": "Enter the Task DueDate"
+        "placeholder": "Enter the Task due date"
     }
 }

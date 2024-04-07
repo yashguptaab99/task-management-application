@@ -23,6 +23,7 @@
         "customParseFormat": "link:dayjs/plugin/customParseFormat",
         "dayjs": "^1.11.10",
         "i18next": "^23.10.1",
+        "jotai": "^2.7.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-helmet-async": "^2.0.4",

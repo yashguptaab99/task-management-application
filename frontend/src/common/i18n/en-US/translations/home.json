@@ -1,3 +1,8 @@
 {
-    "title": "Home"
+    "pageTitle": "Home",
+    "title": "Task At Hand:",
+    "buttons": {
+        "newTaskBtn": "Add Task"
+    },
+    "headerTitle": "Task Manager"
 }

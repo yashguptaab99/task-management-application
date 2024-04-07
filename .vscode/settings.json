@@ -12,7 +12,10 @@
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"eslint.workingDirectories": ["./src"],
 	"cSpell.words": [
+		"dateinput",
 		"Frameguard",
+		"hocs",
+		"hookform",
 		"HSTS",
 		"mantine",
 		"mediaqueries",

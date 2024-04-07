@@ -24,8 +24,6 @@ export const useFieldTranslations = () => {
         return {
             label: t(`forms:${field}.label`, field),
             placeholder: t(`forms:${field}.placeholder`, ''),
-            description: t(`forms:${field}.description`, ''),
-            hint: t(`forms:${field}.tooltip`, ''),
         }
     }
 

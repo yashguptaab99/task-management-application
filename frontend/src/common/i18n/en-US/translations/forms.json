@@ -1,0 +1,14 @@
+{
+    "name": {
+        "label": "Task Name",
+        "placeholder": "Enter the Task name"
+    },
+    "description": {
+        "label": "Task Description",
+        "placeholder": "Enter the Task description"
+    },
+    "dueDate": {
+        "label": "Task DueDate",
+        "placeholder": "Enter the Task DueDate"
+    }
+}

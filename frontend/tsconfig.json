@@ -16,7 +16,8 @@
         "noEmit": true,
         "jsx": "react-jsx",
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
+            "@/interfaces/*": ["./interfaces/*"]
         }
     },
     "include": ["src", "index.d.ts", "env.d.ts"]

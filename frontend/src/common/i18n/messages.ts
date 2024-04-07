@@ -1,9 +1,12 @@
 /* eslint-disable camelcase */
 import { $SpecialObject } from 'i18next/typescript/helpers'
 import { useTranslation } from 'react-i18next'
-import { ZodArray, ZodSchema, ZodString, z } from 'zod'
+import { ZodSchema, z } from 'zod'
 
-export type TGuidelineField = FixedTranslation
+import FormsTranslation from '@/common/i18n/en-US/translations/forms.json'
+
+export type TFieldKey = keyof typeof FormsTranslation
+export type TGuidelineField = FixedTranslation | TFieldKey
 
 export class FixedTranslation {
     constructor(public translation: string) {}
@@ -11,6 +14,20 @@ export class FixedTranslation {
 
 export const useFieldTranslations = () => {
     const { t } = useTranslation('forms')
+
+    /**
+     * Returns label, placeholder, description and hint frm forms.json
+     * into the fields FormBuilder expected format
+     * @param field key on forms.json
+     */
+    const formField = (field: TFieldKey) => {
+        return {
+            label: t(`forms:${field}.label`, field),
+            placeholder: t(`forms:${field}.placeholder`, ''),
+            description: t(`forms:${field}.description`, ''),
+            hint: t(`forms:${field}.tooltip`, ''),
+        }
+    }
 
     const v = {
         /**
@@ -125,24 +142,26 @@ export const useFieldTranslations = () => {
         return ''
     }
 
-    const optionalHandler = (
-        schema: z.ZodString | z.ZodDate | z.ZodArray<z.ZodType, 'many'>,
-        optional: boolean = false
-    ) => {
+    const optionalString = (schema: z.ZodString, optional: boolean = false) => {
         if (!optional) return schema
 
-        if (schema instanceof ZodString)
-            return z
-                .union([schema, z.string().length(0)])
-                .optional()
-                .nullish()
-                .transform(transforms.undefinedIfEmpty)
+        return z
+            .union([schema, z.string().length(0)])
+            .optional()
+            .nullish()
+            .transform(transforms.undefinedIfEmpty)
+    }
 
-        if (schema instanceof ZodString) return schema.optional().nullish().transform(transforms.undefinedIfEmpty)
+    const optionalDate = (schema: z.ZodDate, optional: boolean = false) => {
+        if (!optional) return schema
 
-        if (schema instanceof ZodArray) return z.union([schema, z.array(z.literal('')).length(0).optional()])
+        return schema.optional().nullable()
+    }
 
-        return schema
+    const optionalArray = (schema: z.ZodArray<z.ZodType, 'many'>, optional: boolean = false) => {
+        if (!optional) return schema
+
+        return z.union([schema, z.array(z.literal('')).length(0).optional()])
     }
 
     /**
@@ -175,7 +194,7 @@ export const useFieldTranslations = () => {
             field: TGuidelineField,
             { min = 3, max = 120, optional = false }: { min?: number; max?: number; optional?: boolean } = {}
         ) =>
-            optionalHandler(
+            optionalString(
                 z
                     .string({
                         required_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
@@ -197,7 +216,7 @@ export const useFieldTranslations = () => {
             field: TGuidelineField,
             { min = 3, max = 1000, optional }: { min?: number; max?: number; optional?: boolean } = {}
         ) =>
-            optionalHandler(
+            optionalString(
                 z
                     .string({
                         required_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
@@ -216,7 +235,7 @@ export const useFieldTranslations = () => {
          * @param config defaults to min: 3, max: 120
          */
         selectField: (field: TGuidelineField, { optional = false }: { optional?: boolean } = {}) =>
-            optionalHandler(
+            optionalString(
                 z
                     .string({
                         required_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
@@ -235,7 +254,7 @@ export const useFieldTranslations = () => {
          * @param config defaults to optional: false
          */
         date: (field: TGuidelineField, { optional }: { optional?: boolean } = {}) =>
-            optionalHandler(
+            optionalDate(
                 z.date({
                     required_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
                     invalid_type_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
@@ -264,17 +283,23 @@ export const useFieldTranslations = () => {
          * @param field key on forms.json
          * @param config defaults to min: 3, max: 120
          */
-        email: (field: TGuidelineField, { min = 3, max = 120 }: { min?: number; max?: number } = {}) =>
-            z
-                .string({
-                    required_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
-                    invalid_type_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
-                })
-                .trim()
-                .email(v.INVALID(fieldNameForValidation(field)))
-                .min(1, { message: v.EMPTY_FIELD(fieldNameForValidation(field)) })
-                .min(min, { message: v.STRING_MIN_LENGTH(fieldNameForValidation(field), min) })
-                .max(max, { message: v.STRING_MAX_LENGTH(fieldNameForValidation(field), max) }),
+        email: (
+            field: TGuidelineField,
+            { min = 3, max = 120, optional }: { min?: number; max?: number; optional?: boolean } = {}
+        ) =>
+            optionalString(
+                z
+                    .string({
+                        required_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
+                        invalid_type_error: v.EMPTY_FIELD(fieldNameForValidation(field)),
+                    })
+                    .trim()
+                    .email(v.INVALID(fieldNameForValidation(field)))
+                    .min(1, { message: v.EMPTY_FIELD(fieldNameForValidation(field)) })
+                    .min(min, { message: v.STRING_MIN_LENGTH(fieldNameForValidation(field), min) })
+                    .max(max, { message: v.STRING_MAX_LENGTH(fieldNameForValidation(field), max) }),
+                optional
+            ),
 
         /**
          * Default values for Avatar inputs
@@ -334,7 +359,7 @@ export const useFieldTranslations = () => {
                 noDuplicates = false,
             }: { min?: number; max?: number; optional?: boolean; noDuplicates?: boolean } = {}
         ) => {
-            const result = optionalHandler(
+            const result = optionalArray(
                 z
                     .array(schema, { required_error: v.EMPTY_FIELD(fieldNameForValidation(field)) })
                     .min(min, { message: v.ARRAY_MIN_LENGTH(fieldNameForValidation(field), min) })
@@ -366,5 +391,5 @@ export const useFieldTranslations = () => {
         },
     }
 
-    return { validation: v, guidelines, transforms, fieldNameForValidation }
+    return { validation: v, formField, guidelines, transforms, fieldNameForValidation }
 }

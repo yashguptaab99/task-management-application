@@ -1,0 +1,47 @@
+.wrapper {
+    border-right: 2px solid #ccc;
+    position: sticky;
+    top: 16px;
+}
+
+@media (max-width: calc(48em - 1px)) {
+    .wrapper {
+        border-right: none;
+        width: 100%;
+    }
+
+    .wrapper > div {
+        width: 100%;
+    }
+
+    .wrapper > div > div {
+        width: 100%;
+    }
+}
+
+.toolbarSubtitle {
+    font-size: 16px;
+    color: #9296a6;
+}
+
+.flexContainer {
+    align-items: flex-start;
+}
+
+.linkBtn {
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+    text-align: left;
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.linkBtn:hover,
+.linkBtn.active,
+.linkBtn.selected {
+    background-color: #3a3dce;
+    color: #fff;
+}

@@ -1,0 +1,12 @@
+.checklistContainer {
+    margin-bottom: 20px;
+}
+
+.subTitle {
+    margin-top: 26px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: normal;
+    color: #9296a6;
+    text-transform: capitalize;
+}

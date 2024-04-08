@@ -1,0 +1,23 @@
+.customCheckbox {
+    margin-top: 3px;
+    cursor: pointer;
+    min-width: 13px;
+    width: 13px;
+}
+
+.box {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+    cursor: default;
+    transition: cursor 0.3s;
+}
+
+.boxText {
+    word-break: break-word;
+    font-size: 16px;
+}
+
+.box.boxHover {
+    cursor: pointer;
+}

@@ -8,5 +8,15 @@
     },
     "headerTitle": "Task Manager",
     "addTitle": "Add Task",
-    "editTitle": "Edit Task"
+    "editTitle": "Edit Task",
+    "searchInput": {
+        "label": "Search",
+        "placeholder": "Search"
+    },
+    "navbar": {
+        "status": "Status",
+        "month": "By Date"
+    },
+    "overdue": "Overdue",
+    "done": "DONE"
 }

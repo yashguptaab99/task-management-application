@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Text, Flex, Box } from '@mantine/core'
 
+import { useUpdateStatusTask } from '@/data/mutations'
 import { appStore } from '@/data/store/app.atom'
 import { useAtomWithDisclosure } from '@/hooks'
 import { ITask, TaskStatusEnum } from '@/interfaces/task.types'
@@ -17,8 +18,11 @@ export default function TaskListItem({ task }: { task: ITask }) {
     const isChecked = task.status.id == TaskStatusEnum.DONE
     const setActiveTask = useSetAtom(appStore.activeTask)
     const [, { toggle }] = useAtomWithDisclosure(appStore.isTaskDrawerOpened)
+    const { mutate: updateTaskStatus } = useUpdateStatusTask()
 
-    const handleOnCheck = () => {}
+    const handleOnCheck = () => {
+        updateTaskStatus({ taskId: task._id, status: isChecked ? TaskStatusEnum.TODO : TaskStatusEnum.DONE })
+    }
     const handleClick = () => {
         setActiveTask(task)
         toggle()

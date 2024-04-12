@@ -3,7 +3,7 @@ import { useMutation } from 'react-query'
 import { queryClientConfig, utils } from '@/common'
 import { Notification } from '@/common/actions'
 import { tasksKeys } from '@/data/key-factories'
-import { ICreateTask, ITask, IUpdateTask } from '@/interfaces/task.types'
+import { ICreateTask, ITask, IUpdateTask, TaskStatusEnum } from '@/interfaces/task.types'
 
 function handleMutationError(error: string) {
     Notification.show({
@@ -69,6 +69,49 @@ export function useDeleteTask() {
                 })
             },
             onError: () => handleMutationError('Delete'),
+        }
+    )
+}
+
+export function useUpdateStatusTask() {
+    return useMutation(
+        async ({ taskId, status }: { taskId: string; status: TaskStatusEnum }) => {
+            return await apiClient.post(`/tasks/${taskId}/status`, { status })
+        },
+        {
+            onMutate: ({ taskId, status }) => {
+                queryClient.setQueryData(tasksKeys.all, (previous: ITask[] | undefined) => {
+                    return (
+                        previous?.map((task) => {
+                            if (task._id !== taskId) return task
+                            return {
+                                ...task,
+                                status: {
+                                    timestamp: new Date(),
+                                    id: status,
+                                },
+                            }
+                        }) || []
+                    )
+                })
+            },
+            onSuccess: (data, { taskId, status }) => {
+                queryClient.setQueryData(tasksKeys.all, (previous: ITask[] | undefined) => {
+                    return (
+                        previous?.map((task) => {
+                            if (task._id !== taskId) return task
+                            return {
+                                ...task,
+                                status: {
+                                    timestamp: new Date(),
+                                    id: status,
+                                },
+                            }
+                        }) || []
+                    )
+                })
+            },
+            onError: () => handleMutationError('Update Status'),
         }
     )
 }

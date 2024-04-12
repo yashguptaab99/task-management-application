@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -5,74 +6,28 @@ import { Text, Grid } from '@mantine/core'
 
 import { Drawer } from '@/components/overlay'
 import { ApplicationPageTemplate } from '@/components/template'
+import { useTaskQuery } from '@/data/queries'
 import { appStore } from '@/data/store/app.atom'
 import { ITask, TaskStatusEnum } from '@/interfaces/task.types'
 import { TaskHeader, TaskListItem, TaskListItemForm, TasklistToolbar } from '@/modules/home/components'
+import { TaskSkeleton } from '@/modules/home/components/TaskSkeleton'
 
 import classes from './HomePage.module.css'
 
-const taskLists: ITask[] = [
-    {
-        _id: '66113730d4cb339fd0d1de59',
-        name: 'Task Test',
-        description: 'Task description',
-        dueDate: new Date('2024-04-06T14:09:36.071Z'),
-        status: {
-            id: TaskStatusEnum.DONE,
-            timestamp: new Date('2024-04-06T11:52:59.682Z'),
-        },
-        createdAt: new Date('2024-04-06T11:51:12.990Z'),
-        updatedAt: new Date('2024-04-06T11:52:59.683Z'),
-    },
-    {
-        _id: '66113730d4cb339fd0d1de59',
-        name: 'Task Test',
-        description: 'Task description',
-        dueDate: new Date('2024-04-06T14:09:36.071Z'),
-        status: {
-            id: TaskStatusEnum.DONE,
-            timestamp: new Date('2024-04-06T11:52:59.682Z'),
-        },
-        createdAt: new Date('2024-04-06T11:51:12.990Z'),
-        updatedAt: new Date('2024-04-06T11:52:59.683Z'),
-    },
-    {
-        _id: '66113730d4cb339fd0d1de59',
-        name: 'Task Test',
-        description: 'Task description',
-        dueDate: new Date('2024-04-06T14:09:36.071Z'),
-        status: {
-            id: TaskStatusEnum.DONE,
-            timestamp: new Date('2024-04-06T11:52:59.682Z'),
-        },
-        createdAt: new Date('2024-04-06T11:51:12.990Z'),
-        updatedAt: new Date('2024-04-06T11:52:59.683Z'),
-    },
-    {
-        _id: '66113730d4cb339fd0d1de59',
-        name: 'Task Test',
-        description: 'Task description',
-        dueDate: new Date('2024-05-06T14:09:36.071Z'),
-        status: {
-            id: TaskStatusEnum.TODO,
-            timestamp: new Date('2024-04-06T11:52:59.682Z'),
-        },
-        createdAt: new Date('2024-04-06T11:51:12.990Z'),
-        updatedAt: new Date('2024-04-06T11:52:59.683Z'),
-    },
-]
-
 function HomePage() {
     const { t } = useTranslation('home')
+    const { isLoading, tasks } = useTaskQuery()
 
     const { groupedTasks, doneTasks } = useMemo(() => {
-        const groups: { [key: string]: ITask[] } = {}
+        const groups: {
+            [key: string]: ITask[]
+        } = {}
         const done: ITask[] = []
-        taskLists.forEach((task) => {
+        tasks.forEach((task) => {
             if (task.status.id === TaskStatusEnum.DONE) {
                 done.push(task)
             } else {
-                const monthYear = task.dueDate.toLocaleString('default', { month: 'long', year: 'numeric' })
+                const monthYear = dayjs(task.dueDate).format('MMMM YYYY')
                 if (!groups[monthYear]) {
                     groups[monthYear] = []
                 }
@@ -80,7 +35,7 @@ function HomePage() {
             }
         })
         return { groupedTasks: groups, doneTasks: done }
-    }, [])
+    }, [tasks])
 
     return (
         <ApplicationPageTemplate title={t('pageTitle')}>
@@ -93,22 +48,23 @@ function HomePage() {
                     <TasklistToolbar />
                 </Grid.Col>
                 <Grid.Col pl="xl7" pt="xl4" span={8.5}>
-                    {Object.entries(groupedTasks).map(([monthYear, tasks], index) => (
+                    {Object.entries(groupedTasks).map(([monthYear, tasks]) => (
                         <div key={monthYear} className={classes.checklistContainer}>
                             <Text className={classes.subTitle}>{monthYear.toUpperCase()}</Text>
-                            {tasks.map((task) => (
-                                <TaskListItem key={index} task={task} />
+                            {tasks.map((task, index) => (
+                                <TaskListItem key={`${task._id}-${index}`} task={task} />
                             ))}
                         </div>
                     ))}
                     {doneTasks.length > 0 && (
                         <div className={classes.checklistContainer}>
                             <Text className={classes.subTitle}>{t('done')}</Text>
-                            {doneTasks.map((task, index) => (
-                                <TaskListItem key={index} task={task} />
+                            {doneTasks.map((task) => (
+                                <TaskListItem key={task._id} task={task} />
                             ))}
                         </div>
                     )}
+                    {isLoading && <TaskSkeleton />}
                 </Grid.Col>
             </Grid>
         </ApplicationPageTemplate>

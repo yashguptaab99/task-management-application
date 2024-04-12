@@ -1,3 +1,4 @@
+import { useSetAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 
 import { Avatar, Box, Title, Button, Flex } from '@mantine/core'
@@ -8,7 +9,13 @@ import { useAtomWithDisclosure } from '@/hooks'
 
 export default function TaskHeader() {
     const { t } = useTranslation('home')
+    const setActiveTask = useSetAtom(appStore.activeTask)
     const [, { toggle }] = useAtomWithDisclosure(appStore.isTaskDrawerOpened)
+
+    const handleClick = () => {
+        setActiveTask(undefined)
+        toggle()
+    }
 
     return (
         <Flex justify="space-between" direction={{ base: 'column', sm: 'row' }}>
@@ -26,7 +33,7 @@ export default function TaskHeader() {
                 w={{ base: '100%', sm: 'initial' }}
                 gap={{ base: 'sm', sm: 'md' }}
                 direction={{ base: 'column', sm: 'row' }}>
-                <Button mt="xl2" onClick={toggle} leftSection={<IconPlus />}>
+                <Button mt="xl2" onClick={handleClick} leftSection={<IconPlus />}>
                     {t('buttons.newTaskBtn')}
                 </Button>
             </Flex>

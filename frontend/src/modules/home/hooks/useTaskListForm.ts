@@ -26,7 +26,7 @@ export const useTaskListForm = ({ onSubmitForm, task }: ITaskListForm) => {
         defaultValues: {
             name: task?.name,
             description: task?.description,
-            dueDate: task?.dueDate,
+            dueDate: task?.dueDate ? new Date(task?.dueDate) : undefined,
         },
     })
 

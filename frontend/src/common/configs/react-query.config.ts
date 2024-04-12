@@ -3,9 +3,11 @@
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from 'axios'
 import { t } from 'i18next'
 import { QueryClient } from 'react-query'
 
+import { env } from '@/common'
 import { INotificationToasterType, Notification } from '@/common/actions'
 
 /**
@@ -60,4 +62,8 @@ const queryClient = new QueryClient({
     },
 })
 
-export const queryClientConfig = { queryClient, queryRetryConfigs }
+const apiClient = axios.create({
+    baseURL: env.API_URL,
+})
+
+export const queryClientConfig = { queryClient, queryRetryConfigs, apiClient }

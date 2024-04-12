@@ -1,8 +1,11 @@
 import dayjs from 'dayjs'
+import { useSetAtom } from 'jotai'
 import { useTranslation } from 'react-i18next'
 
 import { Text, Flex, Box } from '@mantine/core'
 
+import { appStore } from '@/data/store/app.atom'
+import { useAtomWithDisclosure } from '@/hooks'
 import { ITask, TaskStatusEnum } from '@/interfaces/task.types'
 
 import classes from './TaskListItem.module.css'
@@ -12,9 +15,14 @@ export default function TaskListItem({ task }: { task: ITask }) {
     const currentDate = dayjs(new Date())
     const formattedDate = dayjs(task.dueDate).format('D MMM, YYYY')
     const isChecked = task.status.id == TaskStatusEnum.DONE
+    const setActiveTask = useSetAtom(appStore.activeTask)
+    const [, { toggle }] = useAtomWithDisclosure(appStore.isTaskDrawerOpened)
 
     const handleOnCheck = () => {}
-    const handleClick = () => {}
+    const handleClick = () => {
+        setActiveTask(task)
+        toggle()
+    }
 
     const itemStyle = {
         textDecoration: isChecked ? 'line-through' : 'none',

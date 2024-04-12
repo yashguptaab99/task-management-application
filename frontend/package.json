@@ -21,6 +21,7 @@
         "@mantine/hooks": "^7.7.1",
         "@mantine/notifications": "^7.7.1",
         "@tabler/icons-react": "^3.1.0",
+        "axios": "^1.6.8",
         "customParseFormat": "link:dayjs/plugin/customParseFormat",
         "dayjs": "^1.11.10",
         "i18next": "^23.10.1",
